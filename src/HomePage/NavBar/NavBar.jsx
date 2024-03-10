@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import logo from "/handyjobslogo.jpg";
 import { Drawer, List, ListItem, ListItemButton } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
 
 const pages = [
   { title: "Home", link: "" },
@@ -29,6 +30,7 @@ const settings = [
 
 function NavBar(props) {
   const { window } = props;
+  const { user, logOut } = useAuth();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -44,7 +46,9 @@ function NavBar(props) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  const handleLogout = async () => {
+    const res = await logOut();
+  };
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <List>
@@ -70,7 +74,7 @@ function NavBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <AppBar component="nav" position="fixed" sx={{ background: "inherit" }}>
+    <AppBar component="nav" position="sticky" sx={{ background: "inherit" }}>
       <Container maxWidth="xl">
         <Toolbar>
           <Typography
@@ -110,10 +114,28 @@ function NavBar(props) {
           >
             <img src={logo} alt="logo" style={{ width: 150, height: 70 }} />
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: {
+                xs: "none",
+                md: "flex",
+                justifyContent: "center",
+                gap: 18,
+              },
+            }}
+          >
             {pages.map((page) => (
               <NavLink key={page.title} to={`/${page.link}`}>
-                <Button sx={{ my: 2, color: "black", display: "block" }}>
+                <Button
+                  sx={{
+                    my: 2,
+                    color: "black",
+                    display: "block",
+                    fontSize: 18,
+                  }}
+                >
                   {page.title}
                 </Button>
               </NavLink>
@@ -121,10 +143,28 @@ function NavBar(props) {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
+            <Tooltip title={user?.displayName}>
+              {user ? (
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar
+                    sx={{
+                      width: { sx: 50, sm: 55 },
+                      height: { sx: 40, sm: 50 },
+                    }}
+                    alt={user?.displayName}
+                    src={user?.photoURL}
+                  />
+                </IconButton>
+              ) : (
+                <Link to="SignIn">
+                  <Button
+                    sx={{ fontSize: 18, color: "black" }}
+                    variant="outlined"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              )}
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
@@ -144,10 +184,10 @@ function NavBar(props) {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  {/* <Typography textAlign="center">{setting.title}</Typography> */}
                   <Link to={`/${setting.link}`}>{setting.title}</Link>
                 </MenuItem>
               ))}
+              {user && <Button onClick={handleLogout}>Logout</Button>}
             </Menu>
           </Box>
         </Toolbar>
