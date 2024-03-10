@@ -74,8 +74,8 @@ function NavBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <AppBar component="nav" position="sticky" sx={{ background: "inherit" }}>
-      <Container maxWidth="xl">
+    <AppBar component="nav" position="sticky" sx={{ background: "white" }}>
+      <Container maxWidth="2xl">
         <Toolbar>
           <Typography
             variant="h6"
@@ -83,7 +83,6 @@ function NavBar(props) {
             component="a"
             href="/"
             sx={{
-              mr: 2,
               display: { xs: "none", md: "flex" },
             }}
           >
@@ -122,7 +121,7 @@ function NavBar(props) {
                 xs: "none",
                 md: "flex",
                 justifyContent: "center",
-                gap: 18,
+                gap: 17,
               },
             }}
           >
@@ -130,7 +129,6 @@ function NavBar(props) {
               <NavLink key={page.title} to={`/${page.link}`}>
                 <Button
                   sx={{
-                    my: 2,
                     color: "black",
                     display: "block",
                     fontSize: 18,
@@ -142,10 +140,10 @@ function NavBar(props) {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box>
             <Tooltip title={user?.displayName}>
               {user ? (
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton onClick={handleOpenUserMenu}>
                   <Avatar
                     sx={{
                       width: { sx: 50, sm: 55 },
@@ -157,12 +155,23 @@ function NavBar(props) {
                 </IconButton>
               ) : (
                 <Link to="SignIn">
-                  <Button
-                    sx={{ fontSize: 18, color: "black" }}
+                  <Typography
+                    sx={{
+                      fontSize: 20,
+                      fontWeight: 500,
+                      p: 1,
+                      color: "black",
+                      transition: "0.3s",
+                      "&:hover": {
+                        bgcolor: "#9381ff",
+                        color: "white",
+                        borderRadius: 2,
+                      },
+                    }}
                     variant="outlined"
                   >
-                    Login
-                  </Button>
+                    Sign in
+                  </Typography>
                 </Link>
               )}
             </Tooltip>
