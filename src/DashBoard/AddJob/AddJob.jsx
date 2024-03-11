@@ -3,6 +3,11 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Select from "react-select";
 import useAuth from "../../Hooks/useAuth";
+import { Label } from "@mui/icons-material";
+import moment from "moment";
+import { imageUpload } from "../../API/utils";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const AddJob = () => {
   const options = [
@@ -12,10 +17,64 @@ const AddJob = () => {
     { value: "Hybrid", label: "Hybrid" },
   ];
   const [selectedOption, setSelectedOption] = useState("");
-
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    const job_title = e.target.job_title.value;
+    const posted_by = e.target.posted_by.value;
+    const posting_date = moment().format("DD/MM/YYYY,h:mm a");
+    const salary_range = e.target.salary_range.value;
+    const applicants_number = e.target.applicants_number.value;
+    const deadline = e.target.deadline.value;
+    const short_description = e.target.short_description.value;
+    const job_category = selectedOption;
+    const job_banner = e.target.job_banner.files[0];
+
+    try {
+      //upload banner
+      const bannerData = await imageUpload(job_banner);
+      const jobData = {
+        job_title,
+        banner: bannerData?.url,
+        posted_by,
+        posting_date,
+        salary_range,
+        applicants_number,
+        deadline,
+        short_description,
+        job_category,
+      };
+      axiosSecure
+        .post("/jobs", jobData)
+        .then((res) => {
+          if (res.data.insertedId) {
+            toast.success("success");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+    console
+      .log
+      // posting_date
+      // job_banner,
+      // job_category,
+      // job_title,
+      // posted_by,
+      // salary_range,
+      // applicants_number,
+      // deadline,
+      // short_description
+      ();
+    // const toasted = toast.loading("Signing Up");
+  };
   return (
-    <Box>
+    <Box p={5} minHeight={790}>
       <Helmet>
         <title>HandyJobs | Add a Job</title>
       </Helmet>
@@ -41,15 +100,23 @@ const AddJob = () => {
       </Paper>
       <Box>
         <form
+          onSubmit={handleAdd}
           style={{
             maxWidth: 750,
-            marginTop: 50,
+            marginTop: 100,
             margin: "auto",
             display: "grid",
-            gap: 10,
+            gridTemplateColumns: { xs: "repeat(1,1fr)", md: "repeat(3,1fr)" },
+            gap: 30,
+            rowGap: 30,
           }}
         >
-          <TextField name="pet_image" type="file" required variant="outlined" />
+          <TextField
+            name="job_banner"
+            type="file"
+            required
+            variant="outlined"
+          />
           <TextField
             name="job_title"
             label="Job Title"
@@ -81,13 +148,14 @@ const AddJob = () => {
             label="Applicants Number"
             variant="outlined"
           />
-          <TextField name="applicants_number" type="date" required />
+
+          <TextField name="deadline" label="Deadline" type="date" required />
 
           <Grid my={"auto"}>
             <Select
               required
               placeholder="Job Category"
-              name="pet_category"
+              name="job_category"
               options={options}
               onChange={setSelectedOption}
               defaultValue={selectedOption}
@@ -96,12 +164,15 @@ const AddJob = () => {
           <TextField
             required
             name="short_description"
-            placeholder="Short Description"
+            multiline
+            label="Short Description"
+            sx={{ gridColumn: "span 2" }}
           />
 
           <Button
             variant="outlined"
             sx={{
+              gridColumn: "span 3",
               bgcolor: "#9381ff",
               width: 300,
               mx: "auto",

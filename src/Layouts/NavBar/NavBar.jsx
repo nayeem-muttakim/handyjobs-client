@@ -193,13 +193,11 @@ function NavBar(props) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  sx={{ py: 1.5 }}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Link to={`/${setting.link}`}>{setting.title}</Link>
-                </MenuItem>
+                <Link key={setting} to={`/${setting.link}`}>
+                  <MenuItem sx={{ py: 1.5 }} onClick={handleCloseUserMenu}>
+                    {setting.title}
+                  </MenuItem>
+                </Link>
               ))}
               {user && (
                 <MenuItem>
