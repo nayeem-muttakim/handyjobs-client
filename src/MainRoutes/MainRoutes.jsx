@@ -5,6 +5,8 @@ import SignUp from "../Authentications/SignUp/SignUp";
 import SignIn from "../Authentications/SignIn/SignIn";
 import HomePage from "../HomePage/HomePage";
 import Blogs from "../HomePage/Blogs/Blogs";
+import PrivateRoute from "../Private/PrivateRoute";
+import AddJob from "../DashBoard/AddJob/AddJob";
 
 export const MainRoutes = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ export const MainRoutes = createBrowserRouter([
       {
         path: "blogs",
         element: <Blogs />,
+      },
+      {
+        path: "add-job",
+        element: (
+          <PrivateRoute>
+            <AddJob />
+          </PrivateRoute>
+        ),
       },
     ],
   },

@@ -11,6 +11,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import signInPic from "/signin.svg";
 import SocialSignIn from "../Social/SocialSignIn";
+import { Helmet } from "react-helmet-async";
 
 const SignIn = () => {
   const { signIn } = useAuth();
@@ -34,7 +35,11 @@ const SignIn = () => {
   };
 
   return (
-    <Box
+   <Box>
+    <Helmet>
+      <title>HandyJobs | Sign in</title>
+    </Helmet>
+     <Box
       display={"flex"}
       alignItems={"center"}
       justifyContent={"center"}
@@ -89,6 +94,7 @@ const SignIn = () => {
         </form>
       </Box>
     </Box>
+   </Box>
   );
 };
 

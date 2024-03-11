@@ -14,20 +14,21 @@ export default function ErrorPage() {
       justifyContent={"center"}
       alignItems={"center"}
       className="min-h-screen"
+      px={2}
     >
       <Lottie animationData={Error} />
       <Link to={"/"}>
         <Button
           sx={{
-            bgcolor: "#9381ff",
+            color: "#9381ff",
             width: 400,
             display: "flex",
             gap: 2,
-            alignItems: "center",
-            p: 2,
+            py: 2,
             fontSize: 17,
+            mx:"auto"
           }}
-          variant="contained"
+          variant="outlined"
           disableElevation
         >
           Home <HomeSharp />

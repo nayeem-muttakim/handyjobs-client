@@ -48,6 +48,7 @@ function NavBar(props) {
   };
   const handleLogout = async () => {
     const res = await logOut();
+    setAnchorElUser(null);
   };
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -192,11 +193,21 @@ function NavBar(props) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  sx={{ py: 1.5 }}
+                  onClick={handleCloseUserMenu}
+                >
                   <Link to={`/${setting.link}`}>{setting.title}</Link>
                 </MenuItem>
               ))}
-              {user && <Button onClick={handleLogout}>Logout</Button>}
+              {user && (
+                <MenuItem>
+                  <Link variant="text" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
